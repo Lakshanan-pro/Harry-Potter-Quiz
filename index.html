@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogwarts Quiz - Test Your Wizarding Knowledge</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="start-screen" class="screen active">
+        <div class="magical-container">
+            <div class="hogwarts-crest">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h1 class="main-title">Hogwarts Quiz</h1>
+            <p class="subtitle">Test your knowledge of the wizarding world</p>
+            <div class="name-input-container">
+                <input type="text" id="wizard-name" placeholder="Enter your wizard name..." maxlength="30">
+            </div>
+            <button id="start-quiz" class="magical-button">
+                <span>Begin Your Journey</span>
+                <i class="fas fa-magic"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="screen">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <div class="level-indicator">
+                    <span id="current-level">Easy</span>
+                    <span class="level-number">Level <span id="level-number">1</span></span>
+                </div>
+                <div class="quiz-stats">
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span id="current-score">0</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-question"></i>
+                        <span id="current-question">1/10</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progress-text">Question 1 of 10</span>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <h2 id="question-text" class="question-text">Question loading...</h2>
+                <div id="options-container" class="options-container">
+                    <!-- Options will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <button id="next-question" class="magical-button" disabled>
+                <span>Next Question</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="level-complete-screen" class="screen">
+        <div class="level-complete-container">
+            <div class="completion-crest">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 class="completion-title">Level Complete!</h2>
+            <div class="level-score">
+                <div class="score-circle">
+                    <span id="level-score-display">0</span>
+                    <small>/10</small>
+                </div>
+            </div>
+            <p id="level-message" class="level-message">Great work, young wizard!</p>
+            <button id="continue-quiz" class="magical-button">
+                <span>Continue to Next Level</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="final-results-screen" class="screen">
+        <div class="results-container">
+            <div class="results-header">
+                <h1 class="results-title">Quiz Complete!</h1>
+                <p class="results-subtitle">Your magical journey has ended</p>
+            </div>
+            
+            <div class="final-score-display">
+                <div class="score-circle">
+                    <span id="final-score">0</span>
+                    <small>/30</small>
+                </div>
+            </div>
+
+            <div class="wizard-title-container">
+                <h2 id="wizard-title" class="wizard-title">Wizard Title</h2>
+                <p id="wizard-description" class="wizard-description">Description</p>
+            </div>
+
+            <div class="results-breakdown">
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Easy Level:</span>
+                    <span id="easy-score" class="breakdown-score">0/10</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Medium Level:</span>
+                    <span id="medium-score" class="breakdown-score">0/10</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Hard Level:</span>
+                    <span id="hard-score" class="breakdown-score">0/10</span>
+                </div>
+            </div>
+
+            <div class="certificate-actions">
+                <button id="view-certificate" class="magical-button primary">
+                    <span>View Certificate</span>
+                    <i class="fas fa-certificate"></i>
+                </button>
+                <button id="retake-quiz" class="magical-button secondary">
+                    <span>Retake Quiz</span>
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="certificate-screen" class="screen">
+        <div class="certificate-container" id="certificate">
+            <div class="certificate-header">
+                <div class="certificate-crest">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1 class="certificate-title">Hogwarts School of Witchcraft and Wizardry</h1>
+                <h2 class="certificate-subtitle">Certificate of Magical Achievement</h2>
+            </div>
+            
+            <div class="certificate-content">
+                <p class="certificate-text">
+                    This is to certify that
+                </p>
+                <h3 id="certificate-name" class="certificate-name">[Wizard Name]</h3>
+                <p class="certificate-text">
+                    has successfully completed the Hogwarts Quiz Challenge and has been awarded the title of
+                </p>
+                <h3 id="certificate-title" class="certificate-title-text">[Wizard Title]</h3>
+                <p class="certificate-text">
+                    with a total score of <span id="certificate-score">[Score]</span> out of 30 points
+                </p>
+                <p class="certificate-date">
+                    Awarded on <span id="certificate-date">[Date]</span>
+                </p>
+            </div>
+            
+            <div class="certificate-seal">
+                <div class="seal-circle">
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+            
+            <div class="certificate-signature">
+                <div class="signature-image">
+                    <img src="images/dumbledore-signature.jpg" alt="Albus Dumbledore's signature">
+                </div>
+                <p>Albus Dumbledore</p>
+                <span>Headmaster</span>
+            </div>
+        </div>
+        
+        <div class="certificate-actions">
+            <button id="download-pdf" class="magical-button primary">
+                <span>Download PDF</span>
+                <i class="fas fa-file-pdf"></i>
+            </button>
+            <button id="download-image" class="magical-button secondary">
+                <span>Download Image</span>
+                <i class="fas fa-image"></i>
+            </button>
+            <button id="back-to-results" class="magical-button">
+                <span>Back to Results</span>
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
