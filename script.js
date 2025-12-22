@@ -200,13 +200,8 @@ class HogwartsQuiz {
         document.getElementById('continue-quiz').addEventListener('click', () => this.continueToNextLevel());
 
         // Final results screen
-        document.getElementById('view-certificate').addEventListener('click', () => this.showCertificate());
+        document.getElementById('download-certificate').addEventListener('click', () => this.downloadCertificate());
         document.getElementById('retake-quiz').addEventListener('click', () => this.retakeQuiz());
-
-        // Certificate screen
-        document.getElementById('download-pdf').addEventListener('click', () => this.downloadCertificate('pdf'));
-        document.getElementById('download-image').addEventListener('click', () => this.downloadCertificate('image'));
-        document.getElementById('back-to-results').addEventListener('click', () => this.showFinalResults());
     }
 
     showScreen(screenId) {
@@ -413,7 +408,7 @@ class HogwartsQuiz {
         }
     }
 
-    showCertificate() {
+    createCertificateElement() {
         const wizardTitleData = this.calculateWizardTitle();
         const today = new Date().toLocaleDateString('en-US', {
             year: 'numeric',
@@ -421,22 +416,72 @@ class HogwartsQuiz {
             day: 'numeric'
         });
 
-        document.getElementById('certificate-name').textContent = this.wizardName;
-        document.getElementById('certificate-title').textContent = wizardTitleData.title;
-        document.getElementById('certificate-score').textContent = this.score;
-        document.getElementById('certificate-date').textContent = today;
-
-        this.showScreen('certificate-screen');
-        this.createMagicalEffect();
+        // Create certificate container
+        const certificate = document.createElement('div');
+        certificate.className = 'certificate-container';
+        certificate.style.position = 'fixed';
+        certificate.style.left = '-9999px';
+        certificate.style.top = '0';
+        certificate.style.width = '800px'; // Fixed width for consistent rendering
+        
+        certificate.innerHTML = `
+            <div class="certificate-header">
+                <div class="certificate-crest">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1 class="certificate-title">Hogwarts School of Witchcraft and Wizardry</h1>
+                <h2 class="certificate-subtitle">Certificate of Magical Achievement</h2>
+            </div>
+            
+            <div class="certificate-content">
+                <p class="certificate-text">
+                    This is to certify that
+                </p>
+                <h3 class="certificate-name">${this.wizardName}</h3>
+                <p class="certificate-text">
+                    has successfully completed the Hogwarts Quiz Challenge and has been awarded the title of
+                </p>
+                <h3 class="certificate-title-text">${wizardTitleData.title}</h3>
+                <p class="certificate-text">
+                    with a total score of <span>${this.score}</span> out of 30 points
+                </p>
+                <p class="certificate-date">
+                    Awarded on <span>${today}</span>
+                </p>
+            </div>
+            
+            <div class="certificate-seal">
+                <div class="seal-circle">
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+            
+            <div class="certificate-signature">
+                <div class="signature-image">
+                    <img src="images/dumbledore-signature.jpg" alt="Albus Dumbledore's signature" crossorigin="anonymous">
+                </div>
+                <p>Albus Dumbledore</p>
+                <span>Headmaster</span>
+            </div>
+        `;
+        
+        document.body.appendChild(certificate);
+        return certificate;
     }
 
-    async downloadCertificate(type) {
-        const certificate = document.getElementById('certificate');
+    async downloadCertificate() {
+        // Show loading notification
+        this.showMagicalNotification('Generating your certificate...');
+        
+        const certificate = this.createCertificateElement();
         
         try {
             // Fixed A4 dimensions (landscape): 297mm x 210mm at 96 DPI
             const A4_WIDTH = 1123; // ~297mm at 96 DPI
             const A4_HEIGHT = 794;  // ~210mm at 96 DPI
+            
+            // Wait a bit for images to load
+            await new Promise(resolve => setTimeout(resolve, 500));
             
             // Calculate scale to fit certificate into A4 proportions
             const certificateRect = certificate.getBoundingClientRect();
@@ -447,6 +492,7 @@ class HogwartsQuiz {
             const canvas = await html2canvas(certificate, {
                 scale: scale,
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: '#F4E4BC',
                 width: certificateRect.width,
                 height: certificateRect.height,
@@ -456,81 +502,50 @@ class HogwartsQuiz {
                 scrollY: 0
             });
 
-            if (type === 'pdf') {
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'landscape',
-                    unit: 'px',
-                    format: [A4_WIDTH, A4_HEIGHT]
-                });
-
-                const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                
-                // Calculate dimensions to maintain aspect ratio
-                const imgAspect = canvas.width / canvas.height;
-                const pdfAspect = A4_WIDTH / A4_HEIGHT;
-                
-                let imgWidth, imgHeight, offsetX, offsetY;
-                
-                if (imgAspect > pdfAspect) {
-                    // Image is wider, fit to width
-                    imgWidth = A4_WIDTH;
-                    imgHeight = A4_WIDTH / imgAspect;
-                    offsetX = 0;
-                    offsetY = (A4_HEIGHT - imgHeight) / 2;
-                } else {
-                    // Image is taller, fit to height
-                    imgHeight = A4_HEIGHT;
-                    imgWidth = A4_HEIGHT * imgAspect;
-                    offsetX = (A4_WIDTH - imgWidth) / 2;
-                    offsetY = 0;
-                }
-
-                pdf.addImage(imgData, 'JPEG', offsetX, offsetY, imgWidth, imgHeight);
-                pdf.save(`Hogwarts-Certificate-${this.wizardName.replace(/\s+/g, '-')}.pdf`);
+            // For image download, create a canvas with A4 proportions
+            const finalCanvas = document.createElement('canvas');
+            finalCanvas.width = A4_WIDTH;
+            finalCanvas.height = A4_HEIGHT;
+            const ctx = finalCanvas.getContext('2d');
+            
+            // Fill background
+            ctx.fillStyle = '#F4E4BC';
+            ctx.fillRect(0, 0, A4_WIDTH, A4_HEIGHT);
+            
+            // Calculate dimensions to center certificate in A4 canvas
+            const imgAspect = canvas.width / canvas.height;
+            const a4Aspect = A4_WIDTH / A4_HEIGHT;
+            
+            let drawWidth, drawHeight, offsetX, offsetY;
+            
+            if (imgAspect > a4Aspect) {
+                // Image is wider, fit to width
+                drawWidth = A4_WIDTH;
+                drawHeight = A4_WIDTH / imgAspect;
+                offsetX = 0;
+                offsetY = (A4_HEIGHT - drawHeight) / 2;
             } else {
-                // For image download, create a canvas with A4 proportions
-                const finalCanvas = document.createElement('canvas');
-                finalCanvas.width = A4_WIDTH;
-                finalCanvas.height = A4_HEIGHT;
-                const ctx = finalCanvas.getContext('2d');
-                
-                // Fill background
-                ctx.fillStyle = '#F4E4BC';
-                ctx.fillRect(0, 0, A4_WIDTH, A4_HEIGHT);
-                
-                // Calculate dimensions to center certificate in A4 canvas
-                const imgAspect = canvas.width / canvas.height;
-                const a4Aspect = A4_WIDTH / A4_HEIGHT;
-                
-                let drawWidth, drawHeight, offsetX, offsetY;
-                
-                if (imgAspect > a4Aspect) {
-                    // Image is wider, fit to width
-                    drawWidth = A4_WIDTH;
-                    drawHeight = A4_WIDTH / imgAspect;
-                    offsetX = 0;
-                    offsetY = (A4_HEIGHT - drawHeight) / 2;
-                } else {
-                    // Image is taller, fit to height
-                    drawHeight = A4_HEIGHT;
-                    drawWidth = A4_HEIGHT * imgAspect;
-                    offsetX = (A4_WIDTH - drawWidth) / 2;
-                    offsetY = 0;
-                }
-                
-                ctx.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
-                
-                const link = document.createElement('a');
-                link.download = `Hogwarts-Certificate-${this.wizardName.replace(/\s+/g, '-')}.png`;
-                link.href = finalCanvas.toDataURL('image/png');
-                link.click();
+                // Image is taller, fit to height
+                drawHeight = A4_HEIGHT;
+                drawWidth = A4_HEIGHT * imgAspect;
+                offsetX = (A4_WIDTH - drawWidth) / 2;
+                offsetY = 0;
             }
+            
+            ctx.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
+            
+            const link = document.createElement('a');
+            link.download = `Hogwarts-Certificate-${this.wizardName.replace(/\s+/g, '-')}.png`;
+            link.href = finalCanvas.toDataURL('image/png');
+            link.click();
 
-            this.showMagicalNotification(`Certificate downloaded as ${type.toUpperCase()}!`);
+            this.showMagicalNotification('Certificate downloaded successfully!');
         } catch (error) {
             console.error('Error generating certificate:', error);
             this.showMagicalNotification('Error generating certificate. Please try again.');
+        } finally {
+            // Remove the temporary certificate element
+            certificate.remove();
         }
     }
 

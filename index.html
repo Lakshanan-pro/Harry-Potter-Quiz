@@ -123,9 +123,9 @@
             </div>
 
             <div class="certificate-actions">
-                <button id="view-certificate" class="magical-button primary">
-                    <span>View Certificate</span>
-                    <i class="fas fa-certificate"></i>
+                <button id="download-certificate" class="magical-button primary">
+                    <span>Download Certificate</span>
+                    <i class="fas fa-download"></i>
                 </button>
                 <button id="retake-quiz" class="magical-button secondary">
                     <span>Retake Quiz</span>
@@ -135,66 +135,7 @@
         </div>
     </div>
 
-    <div id="certificate-screen" class="screen">
-        <div class="certificate-container" id="certificate">
-            <div class="certificate-header">
-                <div class="certificate-crest">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <h1 class="certificate-title">Hogwarts School of Witchcraft and Wizardry</h1>
-                <h2 class="certificate-subtitle">Certificate of Magical Achievement</h2>
-            </div>
-            
-            <div class="certificate-content">
-                <p class="certificate-text">
-                    This is to certify that
-                </p>
-                <h3 id="certificate-name" class="certificate-name">[Wizard Name]</h3>
-                <p class="certificate-text">
-                    has successfully completed the Hogwarts Quiz Challenge and has been awarded the title of
-                </p>
-                <h3 id="certificate-title" class="certificate-title-text">[Wizard Title]</h3>
-                <p class="certificate-text">
-                    with a total score of <span id="certificate-score">[Score]</span> out of 30 points
-                </p>
-                <p class="certificate-date">
-                    Awarded on <span id="certificate-date">[Date]</span>
-                </p>
-            </div>
-            
-            <div class="certificate-seal">
-                <div class="seal-circle">
-                    <i class="fas fa-star"></i>
-                </div>
-            </div>
-            
-            <div class="certificate-signature">
-                <div class="signature-image">
-                    <img src="images/dumbledore-signature.jpg" alt="Albus Dumbledore's signature">
-                </div>
-                <p>Albus Dumbledore</p>
-                <span>Headmaster</span>
-            </div>
-        </div>
-        
-        <div class="certificate-actions">
-            <button id="download-pdf" class="magical-button primary">
-                <span>Download PDF</span>
-                <i class="fas fa-file-pdf"></i>
-            </button>
-            <button id="download-image" class="magical-button secondary">
-                <span>Download Image</span>
-                <i class="fas fa-image"></i>
-            </button>
-            <button id="back-to-results" class="magical-button">
-                <span>Back to Results</span>
-                <i class="fas fa-arrow-left"></i>
-            </button>
-        </div>
-    </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
