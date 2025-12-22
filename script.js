@@ -416,13 +416,12 @@ class HogwartsQuiz {
             day: 'numeric'
         });
 
-        // Create certificate container
+        // Create certificate container with fixed desktop dimensions
         const certificate = document.createElement('div');
-        certificate.className = 'certificate-container';
+        certificate.className = 'certificate-download';
         certificate.style.position = 'fixed';
         certificate.style.left = '-9999px';
         certificate.style.top = '0';
-        certificate.style.width = '800px'; // Fixed width for consistent rendering
         
         certificate.innerHTML = `
             <div class="certificate-header">

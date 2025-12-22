@@ -551,6 +551,21 @@ body::before {
     font-family: 'Crimson Text', serif;
 }
 
+/* Certificate for download - fixed desktop dimensions regardless of screen size */
+.certificate-download {
+    width: 800px !important;
+    max-width: 800px !important;
+    min-width: 800px !important;
+    padding: 60px 40px !important;
+    background: var(--parchment-texture);
+    border: 5px double var(--primary-gold);
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    color: var(--primary-dark);
+    font-family: 'Crimson Text', serif;
+}
+
 .certificate-header {
     text-align: center;
     margin-bottom: 40px;
@@ -570,6 +585,13 @@ body::before {
     color: var(--primary-gold);
 }
 
+.certificate-download .certificate-crest {
+    width: 100px !important;
+    height: 100px !important;
+    margin: 0 auto 20px !important;
+    font-size: 2.5em !important;
+}
+
 .certificate-title {
     font-family: 'Cinzel', serif;
     font-size: 2.5em;
@@ -578,11 +600,21 @@ body::before {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+.certificate-download .certificate-title {
+    font-size: 2.5em !important;
+    line-height: 1.2 !important;
+}
+
 .certificate-subtitle {
     font-family: 'Cinzel', serif;
     font-size: 1.8em;
     color: var(--dark-gold);
     margin-bottom: 30px;
+}
+
+.certificate-download .certificate-subtitle {
+    font-size: 1.8em !important;
+    margin-bottom: 30px !important;
 }
 
 .certificate-content {
@@ -597,6 +629,12 @@ body::before {
     line-height: 1.6;
 }
 
+.certificate-download .certificate-text {
+    font-size: 1.3em !important;
+    margin-bottom: 20px !important;
+    line-height: 1.6 !important;
+}
+
 .certificate-name {
     font-family: 'Cinzel', serif;
     font-size: 2.5em;
@@ -608,6 +646,12 @@ body::before {
     padding: 0 20px 10px;
 }
 
+.certificate-download .certificate-name {
+    font-size: 2.5em !important;
+    margin: 20px 0 !important;
+    padding: 0 20px 10px !important;
+}
+
 .certificate-title-text {
     font-family: 'Cinzel', serif;
     font-size: 2em;
@@ -616,16 +660,31 @@ body::before {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+.certificate-download .certificate-title-text {
+    font-size: 2em !important;
+    margin: 20px 0 !important;
+}
+
 .certificate-date {
     font-size: 1.1em;
     color: var(--dark-gold);
     font-style: italic;
 }
 
+.certificate-download .certificate-date {
+    font-size: 1.1em !important;
+}
+
 .certificate-seal {
     position: absolute;
     bottom: 40px;
     right: 40px;
+}
+
+.certificate-download .certificate-seal {
+    position: absolute !important;
+    bottom: 40px !important;
+    right: 40px !important;
 }
 
 .seal-circle {
@@ -641,11 +700,23 @@ body::before {
     color: var(--primary-gold);
 }
 
+.certificate-download .seal-circle {
+    width: 80px !important;
+    height: 80px !important;
+    font-size: 2em !important;
+}
+
 .certificate-signature {
     position: absolute;
     bottom: 40px;
     left: 40px;
     text-align: center;
+}
+
+.certificate-download .certificate-signature {
+    position: absolute !important;
+    bottom: 40px !important;
+    left: 40px !important;
 }
 
 .signature-image {
@@ -656,11 +727,20 @@ body::before {
     align-items: center;
 }
 
+.certificate-download .signature-image {
+    height: 60px !important;
+    margin-bottom: 10px !important;
+}
+
 .signature-image img {
     max-height: 50px;
     width: auto;
     opacity: 0.8;
     filter: contrast(1.2) brightness(0.9);
+}
+
+.certificate-download .signature-image img {
+    max-height: 50px !important;
 }
 
 .certificate-signature p {
@@ -670,10 +750,19 @@ body::before {
     margin-bottom: 5px;
 }
 
+.certificate-download .certificate-signature p {
+    font-size: 1.3em !important;
+    margin-bottom: 5px !important;
+}
+
 .certificate-signature span {
     font-size: 0.9em;
     color: var(--dark-gold);
     font-style: italic;
+}
+
+.certificate-download .certificate-signature span {
+    font-size: 0.9em !important;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
@@ -710,55 +799,7 @@ body::before {
         font-size: 1em;
     }
     
-    /* Mobile Certificate Layout Fixes */
-    #certificate-screen {
-        padding: 15px;
-    }
-    
-    .certificate-container {
-        width: 100%;
-        max-width: 100%;
-        padding: 30px 15px;
-        margin: 0 auto;
-    }
-    
-    .certificate-crest {
-        width: 70px;
-        height: 70px;
-        font-size: 2em;
-    }
-    
-    .certificate-title {
-        font-size: 1.4em;
-        line-height: 1.3;
-    }
-    
-    .certificate-subtitle {
-        font-size: 1.1em;
-        line-height: 1.3;
-    }
-    
-    .certificate-text {
-        font-size: 1em;
-        line-height: 1.5;
-        margin-bottom: 15px;
-    }
-    
-    .certificate-name {
-        font-size: 1.6em;
-        padding: 0 10px 8px;
-        margin: 15px 0;
-    }
-    
-    .certificate-title-text {
-        font-size: 1.4em;
-        margin: 15px 0;
-    }
-    
-    .certificate-date {
-        font-size: 0.95em;
-    }
-    
+    /* Mobile button layout fixes */
     .certificate-actions {
         flex-direction: column;
         align-items: stretch;
@@ -773,36 +814,6 @@ body::before {
         justify-content: center;
         padding: 15px 20px;
         font-size: 1em;
-    }
-    
-    .certificate-seal,
-    .certificate-signature {
-        position: static;
-        margin: 20px auto;
-        text-align: center;
-    }
-    
-    .seal-circle {
-        width: 60px;
-        height: 60px;
-        font-size: 1.5em;
-    }
-    
-    .signature-image {
-        height: 50px;
-        margin-bottom: 8px;
-    }
-    
-    .signature-image img {
-        max-height: 40px;
-    }
-    
-    .certificate-signature p {
-        font-size: 1.1em;
-    }
-    
-    .certificate-signature span {
-        font-size: 0.85em;
     }
 }
 
