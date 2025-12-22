@@ -475,17 +475,17 @@ class HogwartsQuiz {
         const certificate = this.createCertificateElement();
         
         try {
-            // Fixed A4 dimensions (landscape): 297mm x 210mm at 96 DPI
-            const A4_WIDTH = 1123; // ~297mm at 96 DPI
-            const A4_HEIGHT = 794;  // ~210mm at 96 DPI
+            // Custom certificate dimensions: 1600px × 1746px
+            const CERT_WIDTH = 1600;
+            const CERT_HEIGHT = 1746;
             
             // Wait a bit for images to load
             await new Promise(resolve => setTimeout(resolve, 500));
             
-            // Calculate scale to exactly match A4 dimensions
+            // Calculate scale to exactly match certificate dimensions
             const certificateRect = certificate.getBoundingClientRect();
-            const scaleX = A4_WIDTH / certificateRect.width;
-            const scaleY = A4_HEIGHT / certificateRect.height;
+            const scaleX = CERT_WIDTH / certificateRect.width;
+            const scaleY = CERT_HEIGHT / certificateRect.height;
             
             // Use the larger scale to ensure certificate fills entire canvas
             const scale = Math.max(scaleX, scaleY);
@@ -503,18 +503,18 @@ class HogwartsQuiz {
                 scrollY: 0
             });
 
-            // Create final canvas at exact A4 size and stretch certificate to fill
+            // Create final canvas at exact certificate size and stretch to fill
             const finalCanvas = document.createElement('canvas');
-            finalCanvas.width = A4_WIDTH;
-            finalCanvas.height = A4_HEIGHT;
+            finalCanvas.width = CERT_WIDTH;
+            finalCanvas.height = CERT_HEIGHT;
             const ctx = finalCanvas.getContext('2d');
             
             // Fill background
             ctx.fillStyle = '#F4E4BC';
-            ctx.fillRect(0, 0, A4_WIDTH, A4_HEIGHT);
+            ctx.fillRect(0, 0, CERT_WIDTH, CERT_HEIGHT);
             
-            // Draw certificate stretched to fill entire A4 canvas (no borders, no centering)
-            ctx.drawImage(canvas, 0, 0, A4_WIDTH, A4_HEIGHT);
+            // Draw certificate stretched to fill entire canvas (no borders, no centering)
+            ctx.drawImage(canvas, 0, 0, CERT_WIDTH, CERT_HEIGHT);
             
             const link = document.createElement('a');
             link.download = `Hogwarts-Certificate-${this.wizardName.replace(/\s+/g, '-')}.png`;
