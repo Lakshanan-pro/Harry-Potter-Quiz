@@ -482,11 +482,13 @@ class HogwartsQuiz {
             // Wait a bit for images to load
             await new Promise(resolve => setTimeout(resolve, 500));
             
-            // Calculate scale to fit certificate into A4 proportions
+            // Calculate scale to exactly match A4 dimensions
             const certificateRect = certificate.getBoundingClientRect();
             const scaleX = A4_WIDTH / certificateRect.width;
             const scaleY = A4_HEIGHT / certificateRect.height;
-            const scale = Math.min(scaleX, scaleY, 3); // Max scale of 3 for quality
+            
+            // Use the larger scale to ensure certificate fills entire canvas
+            const scale = Math.max(scaleX, scaleY);
             
             const canvas = await html2canvas(certificate, {
                 scale: scale,
@@ -501,7 +503,7 @@ class HogwartsQuiz {
                 scrollY: 0
             });
 
-            // For image download, create a canvas with A4 proportions
+            // Create final canvas at exact A4 size and stretch certificate to fill
             const finalCanvas = document.createElement('canvas');
             finalCanvas.width = A4_WIDTH;
             finalCanvas.height = A4_HEIGHT;
@@ -511,27 +513,8 @@ class HogwartsQuiz {
             ctx.fillStyle = '#F4E4BC';
             ctx.fillRect(0, 0, A4_WIDTH, A4_HEIGHT);
             
-            // Calculate dimensions to center certificate in A4 canvas
-            const imgAspect = canvas.width / canvas.height;
-            const a4Aspect = A4_WIDTH / A4_HEIGHT;
-            
-            let drawWidth, drawHeight, offsetX, offsetY;
-            
-            if (imgAspect > a4Aspect) {
-                // Image is wider, fit to width
-                drawWidth = A4_WIDTH;
-                drawHeight = A4_WIDTH / imgAspect;
-                offsetX = 0;
-                offsetY = (A4_HEIGHT - drawHeight) / 2;
-            } else {
-                // Image is taller, fit to height
-                drawHeight = A4_HEIGHT;
-                drawWidth = A4_HEIGHT * imgAspect;
-                offsetX = (A4_WIDTH - drawWidth) / 2;
-                offsetY = 0;
-            }
-            
-            ctx.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
+            // Draw certificate stretched to fill entire A4 canvas (no borders, no centering)
+            ctx.drawImage(canvas, 0, 0, A4_WIDTH, A4_HEIGHT);
             
             const link = document.createElement('a');
             link.download = `Hogwarts-Certificate-${this.wizardName.replace(/\s+/g, '-')}.png`;
