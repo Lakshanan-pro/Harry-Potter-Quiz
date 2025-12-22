@@ -710,25 +710,69 @@ body::before {
         font-size: 1em;
     }
     
+    /* Mobile Certificate Layout Fixes */
+    #certificate-screen {
+        padding: 15px;
+    }
+    
     .certificate-container {
-        padding: 40px 20px;
+        width: 100%;
+        max-width: 100%;
+        padding: 30px 15px;
+        margin: 0 auto;
+    }
+    
+    .certificate-crest {
+        width: 70px;
+        height: 70px;
+        font-size: 2em;
     }
     
     .certificate-title {
-        font-size: 2em;
+        font-size: 1.4em;
+        line-height: 1.3;
     }
     
     .certificate-subtitle {
-        font-size: 1.5em;
+        font-size: 1.1em;
+        line-height: 1.3;
+    }
+    
+    .certificate-text {
+        font-size: 1em;
+        line-height: 1.5;
+        margin-bottom: 15px;
     }
     
     .certificate-name {
-        font-size: 2em;
+        font-size: 1.6em;
+        padding: 0 10px 8px;
+        margin: 15px 0;
+    }
+    
+    .certificate-title-text {
+        font-size: 1.4em;
+        margin: 15px 0;
+    }
+    
+    .certificate-date {
+        font-size: 0.95em;
     }
     
     .certificate-actions {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        gap: 10px;
+        margin-top: 20px;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .certificate-actions .magical-button {
+        width: 100%;
+        justify-content: center;
+        padding: 15px 20px;
+        font-size: 1em;
     }
     
     .certificate-seal,
@@ -738,6 +782,12 @@ body::before {
         text-align: center;
     }
     
+    .seal-circle {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5em;
+    }
+    
     .signature-image {
         height: 50px;
         margin-bottom: 8px;
@@ -745,6 +795,14 @@ body::before {
     
     .signature-image img {
         max-height: 40px;
+    }
+    
+    .certificate-signature p {
+        font-size: 1.1em;
+    }
+    
+    .certificate-signature span {
+        font-size: 0.85em;
     }
 }
 

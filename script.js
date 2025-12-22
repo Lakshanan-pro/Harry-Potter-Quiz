@@ -434,30 +434,96 @@ class HogwartsQuiz {
         const certificate = document.getElementById('certificate');
         
         try {
+            // Fixed A4 dimensions (landscape): 297mm x 210mm at 96 DPI
+            const A4_WIDTH = 1123; // ~297mm at 96 DPI
+            const A4_HEIGHT = 794;  // ~210mm at 96 DPI
+            
+            // Calculate scale to fit certificate into A4 proportions
+            const certificateRect = certificate.getBoundingClientRect();
+            const scaleX = A4_WIDTH / certificateRect.width;
+            const scaleY = A4_HEIGHT / certificateRect.height;
+            const scale = Math.min(scaleX, scaleY, 3); // Max scale of 3 for quality
+            
             const canvas = await html2canvas(certificate, {
-                scale: 2,
+                scale: scale,
                 useCORS: true,
-                backgroundColor: '#F4E4BC'
+                backgroundColor: '#F4E4BC',
+                width: certificateRect.width,
+                height: certificateRect.height,
+                windowWidth: certificateRect.width,
+                windowHeight: certificateRect.height,
+                scrollX: 0,
+                scrollY: 0
             });
 
             if (type === 'pdf') {
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({
                     orientation: 'landscape',
-                    unit: 'mm',
-                    format: 'a4'
+                    unit: 'px',
+                    format: [A4_WIDTH, A4_HEIGHT]
                 });
 
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                const imgWidth = 297;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                // Calculate dimensions to maintain aspect ratio
+                const imgAspect = canvas.width / canvas.height;
+                const pdfAspect = A4_WIDTH / A4_HEIGHT;
+                
+                let imgWidth, imgHeight, offsetX, offsetY;
+                
+                if (imgAspect > pdfAspect) {
+                    // Image is wider, fit to width
+                    imgWidth = A4_WIDTH;
+                    imgHeight = A4_WIDTH / imgAspect;
+                    offsetX = 0;
+                    offsetY = (A4_HEIGHT - imgHeight) / 2;
+                } else {
+                    // Image is taller, fit to height
+                    imgHeight = A4_HEIGHT;
+                    imgWidth = A4_HEIGHT * imgAspect;
+                    offsetX = (A4_WIDTH - imgWidth) / 2;
+                    offsetY = 0;
+                }
 
-                pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+                pdf.addImage(imgData, 'JPEG', offsetX, offsetY, imgWidth, imgHeight);
                 pdf.save(`Hogwarts-Certificate-${this.wizardName.replace(/\s+/g, '-')}.pdf`);
             } else {
+                // For image download, create a canvas with A4 proportions
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = A4_WIDTH;
+                finalCanvas.height = A4_HEIGHT;
+                const ctx = finalCanvas.getContext('2d');
+                
+                // Fill background
+                ctx.fillStyle = '#F4E4BC';
+                ctx.fillRect(0, 0, A4_WIDTH, A4_HEIGHT);
+                
+                // Calculate dimensions to center certificate in A4 canvas
+                const imgAspect = canvas.width / canvas.height;
+                const a4Aspect = A4_WIDTH / A4_HEIGHT;
+                
+                let drawWidth, drawHeight, offsetX, offsetY;
+                
+                if (imgAspect > a4Aspect) {
+                    // Image is wider, fit to width
+                    drawWidth = A4_WIDTH;
+                    drawHeight = A4_WIDTH / imgAspect;
+                    offsetX = 0;
+                    offsetY = (A4_HEIGHT - drawHeight) / 2;
+                } else {
+                    // Image is taller, fit to height
+                    drawHeight = A4_HEIGHT;
+                    drawWidth = A4_HEIGHT * imgAspect;
+                    offsetX = (A4_WIDTH - drawWidth) / 2;
+                    offsetY = 0;
+                }
+                
+                ctx.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
+                
                 const link = document.createElement('a');
                 link.download = `Hogwarts-Certificate-${this.wizardName.replace(/\s+/g, '-')}.png`;
-                link.href = canvas.toDataURL('image/png');
+                link.href = finalCanvas.toDataURL('image/png');
                 link.click();
             }
 
